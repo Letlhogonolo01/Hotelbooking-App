@@ -31,11 +31,6 @@ function Navbar() {
                   About Us
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/booking">
-                  Booking
-                </a>
-              </li>
             </ul>
             <ul className="navbar-nav">
               <li className="nav-item">

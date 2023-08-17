@@ -8,6 +8,7 @@ import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import Payment from "./screens/Payment";
 import BookingDetails from "./screens/BookingDetails";
+import About from "./screens/About";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/navbar" element={<Navbar />}></Route>
+          <Route path="/about" element={<About />}></Route>
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>

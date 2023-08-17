@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCalendar } from "@fortawesome/free-solid-svg-icons"; // Added faCalendar
+import { faCalendar } from "@fortawesome/free-solid-svg-icons"; // Added faCalendar
 import DatePicker from "react-datepicker";
 import calculateTotalAmount from "../components/TotalAmount";
+import Navbar from "../components/Navbar";
 
 function BookingDetails() {
   const [checkInDate, setCheckInDate] = useState(null);
@@ -28,10 +29,11 @@ function BookingDetails() {
 
   return (
     <>
+    <Navbar />
       <br />
-      <Link to="/" className="back-icon">
+      {/* <Link to="/" className="back-icon">
         <FontAwesomeIcon icon={faArrowLeft} /> Back
-      </Link>
+      </Link> */}
       <div className="card mb-3" style={{ margin: 10 }}>
         <div className="row g-0">
           <div className="col-md-5">
@@ -39,7 +41,7 @@ function BookingDetails() {
               src="/images/standard-room.jpg"
               className="img-fluid rounded-start"
               alt="room"
-              style={{ width: "100%", height: "100%" }} // Resize styles
+              style={{ width: "100%", height: "100%" }} 
             />
           </div>
           <div className="col-md-7">

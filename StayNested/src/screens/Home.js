@@ -7,12 +7,12 @@ const Home = () => {
   return (
     <>
       <Navbar />
-      <br/>
+      <br />
       <div class="row row-cols-1 row-cols-md-3 g-3">
         <div class="col">
           <Link to="/details">
             <div className="card">
-              <img src="/images/standard-room.jpg" height={210} />
+              <img src="/images/standard-room.jpg" height={210} alt="room" />
               <div class="card-body">
                 <h5 class="card-title">Standard</h5>
                 <p class="card-text">
@@ -27,7 +27,7 @@ const Home = () => {
         <div class="col">
           <Link to="/details">
             <div className="card">
-              <img src="/images/single-room.jpg" height={210} />
+              <img src="/images/single-room.jpg" height={210} alt="room" />
               <div class="card-body">
                 <h5 class="card-title">Single</h5>
                 <p class="card-text">
@@ -43,13 +43,13 @@ const Home = () => {
         <div class="col">
           <Link to="/details">
             <div className="card">
-              <img src="/images/delux-room.jpg" height={210} />
+              <img src="/images/delux-room.jpg" height={210} alt="room" />
               <div class="card-body">
                 <h5 class="card-title">Delux</h5>
                 <p class="card-text">
                   A deluxe room offers additional space and more amenities
                   compared to standard rooms. It may include upgraded
-                  furnishings, larger living areas.
+                  furnishings, living areas, provides more experience.
                 </p>
               </div>
             </div>
@@ -58,14 +58,14 @@ const Home = () => {
         <div class="col">
           <Link to="/details">
             <div className="card">
-              <img src="/images/family-room.jpg" height={210} />
+              <img src="/images/family-room.jpg" height={210} alt="room" />
               <div class="card-body">
                 <h5 class="card-title">Family</h5>
                 <p class="card-text">
-                  A family room is designed to accommodate multiple guests, in a
-                  single unit. It often includes separate sleeping areas for
-                  adults and children, comfortable for families traveling
-                  together.
+                  A family room is designed to accommodate multiple guests,
+                  usually a family, in a single unit. It often includes separate
+                  sleeping areas for adults and children, comfortable for
+                  families traveling together.
                 </p>
               </div>
             </div>
@@ -74,7 +74,7 @@ const Home = () => {
         <div class="col">
           <Link to="/details">
             <div className="card">
-              <img src="/images/suite-room.jpg" height={210} />
+              <img src="/images/suite-room.jpg" height={210} alt="room" />
               <div class="card-body">
                 <h5 class="card-title">Suite</h5>
                 <p class="card-text">
@@ -90,7 +90,11 @@ const Home = () => {
         <div class="col">
           <Link to="/details">
             <div className="card">
-              <img src="/images/presidentialsuite-room.jpg" height={210} />
+              <img
+                src="/images/presidentialsuite-room.jpg"
+                height={210}
+                alt="room"
+              />
               <div class="card-body">
                 <h5 class="card-title">Presidential Suite</h5>
                 <p class="card-text">
@@ -104,7 +108,7 @@ const Home = () => {
           </Link>
         </div>
       </div>
-      <br/>
+      <br />
       <Footer />
     </>
   );
