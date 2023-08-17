@@ -28,6 +28,80 @@
   color: #61dafb;
 }
 
+/* Navbar styling */
+.navbar {
+  background-color: #8d99ae !important;
+}
+.nav-link {
+  color: white !important;
+}
+.navbar-brand {
+  color: white !important;
+}
+.navbar-nav{
+  margin-left: auto !important;
+}
+
+/* Card styling */
+.card-body{
+  background-color: #D9D9D9;
+}
+.card-footer{
+  color: white !important;
+  background-color: #8d99ae;
+}
+.card-text {
+  text-align: left;
+}
+.card-title {
+  text-align: left;
+}
+.total-amount {
+  text-align: left;
+}
+
+/* BookingDetails.css */
+.back-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  cursor: pointer;
+  color: #282c34;
+  /* background-color: #8d99ae; */
+}
+.back-icon svg {
+  margin-right: 5px;
+}
+.date-picker-container {
+  margin-bottom: 10px;
+  padding-left: 20px;
+}
+.date-picker {
+  display: flex;
+  align-items: center;
+}
+.counter-button {
+  width: 30px;
+  height: 30px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.room-counter {
+  display: flex;
+  align-items: center;
+}
+.align-left {
+  text-align: left;
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
