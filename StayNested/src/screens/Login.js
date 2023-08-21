@@ -24,8 +24,9 @@ const Login = () => {
             toast.error(data.error);
           } else {
             toast.success("Login Successful");
-            sessionStorage.setItem("email", email);
-            sessionStorage.setItem("userrole", data.user.role);
+            // sessionStorage.setItem("email", email);
+            // sessionStorage.setItem("userrole", data.user.role);
+            localStorage.setItem('currentUser' , JSON.stringify(newUser));
             usenavigate("/");
           }
         })

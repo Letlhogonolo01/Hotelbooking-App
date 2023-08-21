@@ -102,7 +102,7 @@ function BookingDetails() {
                 <p>Total Amount: R{totalAmount}</p>
               </div>
               <Link to="/payment" className="btn btn-primary">
-                Book Now
+                Checkout
               </Link>
             </div>
           </div>
