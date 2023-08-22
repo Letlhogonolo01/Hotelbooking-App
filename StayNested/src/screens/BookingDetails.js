@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons"; // Added faCalendar
+import { faArrowLeft, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import calculateTotalAmount from "../components/TotalAmount";
 import Navbar from "../components/Navbar";
+import roomData from "../components/Rooms";
 
 function BookingDetails() {
+  // Get room data based on index
+  const { roomIndex } = useParams();
+  const room = roomData[roomIndex];
+
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [numOfGuests, setNumOfGuests] = useState(1);
@@ -22,42 +27,33 @@ function BookingDetails() {
   };
 
   const totalAmount = calculateTotalAmount(
-    numOfGuests,
+    room.pricePerNight,
     checkInDate,
-    checkOutDate
+    checkOutDate,
   );
 
   return (
     <>
-    <Navbar />
+      <Navbar />
       <br />
-      {/* <Link to="/" className="back-icon">
+      <Link to="/" className="back-icon">
         <FontAwesomeIcon icon={faArrowLeft} /> Back
-      </Link> */}
+      </Link>
       <div className="card mb-3" style={{ margin: 10 }}>
         <div className="row g-0">
           <div className="col-md-5">
             <img
-              src="/images/standard-room.jpg"
+              src={room.image}
               className="img-fluid rounded-start"
-              alt="room"
-              style={{ width: "100%", height: "100%" }} 
+              alt={room.title}
+              style={{ width: "100%", height: "100%" }}
             />
           </div>
           <div className="col-md-7">
             <div className="card-body">
-              <h5 className="card-title">Standard</h5>
-              <p className="card-text">
-                The Standard Room is a basic lodging option offered by hotels,
-                providing essential amenities like a bed and bathroom. It's the
-                most affordable choice, catering to budget-conscious travelers
-                seeking a comfortable place to stay. <br /> The room is simple
-                in decor and furnishings, often including a writing desk, TV,
-                and climate control. It's widely available and suitable for
-                short stays, appealing to solo travelers, couples, and business
-                travelers looking for practical accommodations without luxury
-                extras.
-              </p>
+              <h5 className="card-title">{room.title}</h5>
+              <p className="card-text">{room.description}</p>
+              <p className="card-text">Price per Night: R{room.pricePerNight}</p>
               <div className="date-picker-container">
                 <div className="align-left">
                   <p>Select Check-in Date:</p>
@@ -66,6 +62,7 @@ function BookingDetails() {
                   <FontAwesomeIcon icon={faCalendar} />
                   <DatePicker
                     selected={checkInDate}
+                    placeholderText="Select Date:"
                     onChange={(date) => setCheckInDate(date)}
                   />
                 </div>
@@ -78,12 +75,13 @@ function BookingDetails() {
                   <FontAwesomeIcon icon={faCalendar} />
                   <DatePicker
                     selected={checkOutDate}
+                    placeholderText="Select Date: "
                     onChange={(date) => setCheckOutDate(date)}
                   />
                 </div>
               </div>
-              <div className="room-counter">
-                <p className="room-count">Number of Guests:</p>
+              <div className="guest-counter">
+                <p className="guest-count">Number of Guests:</p>
                 <button
                   className="counter-button btn btn-danger"
                   onClick={handleDecrement}
@@ -102,7 +100,7 @@ function BookingDetails() {
                 <p>Total Amount: R{totalAmount}</p>
               </div>
               <Link to="/payment" className="btn btn-primary">
-                Checkout
+                Confirm Booking
               </Link>
             </div>
           </div>

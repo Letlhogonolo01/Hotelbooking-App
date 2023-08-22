@@ -21,7 +21,10 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/details" element={<BookingDetails />}></Route>
+          <Route
+            path="/details/:roomIndex"
+            element={<BookingDetails />}
+          ></Route>
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/" element={<Footer />}></Route>
         </Routes>
