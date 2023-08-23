@@ -4,6 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const User = require("./models/user");
+// const Admin = require("./models/admin")
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,40 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 mongoose.connect("mongodb://127.0.0.1:27017/stay-nested");
+
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
+
+const storeItems = new Map([
+  [1, { priceInCents: 10000, name: "Learn React Today" }],
+  [2, { priceInCents: 20000, name: "Learn CSS Today" }],
+]);
+
+app.post("/create-checkout-session", async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: req.body.items.map((item) => {
+        const storeItem = storeItems.get(item.id);
+        return {
+          price_data: {
+            currency: "zar",
+            product_data: {
+              name: storeItem.name,
+            },
+            unit_amount: storeItem.priceInCents,
+          },
+          quantity: item.quantity,
+        };
+      }),
+      success_url: `${process.env.CLIENT_URL}/success`,
+      cancel_url: `${process.env.CLIENT_URL}/cancel`,
+    });
+    res.json({ url: session.url });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("hi server");
@@ -56,6 +91,13 @@ app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Check if the login attempt is for the admin account
+    if (email === "admin@staynested.co.za" && password === "Admin@1") {
+      // Respond with a success message for admin login
+      return res.status(200).json({ message: "Admin login successful" });
+    }
+
+    // For non-admin users, perform the regular user login check
     const user = await User.findOne({ email });
 
     if (!user || user.password !== password) {
@@ -63,7 +105,14 @@ app.post("/login", async (req, res) => {
     }
 
     // Include user details in the response
-    res.status(200).json({ message: "Login successful", user });
+    res.status(200).json({ message: "User login successful", user });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while logging in" });
+  }
+});
+app.post("/login", async (req, res) => {
+  try {
+    res.status(200).json({ message: "User login successful", user });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while logging in" });
   }

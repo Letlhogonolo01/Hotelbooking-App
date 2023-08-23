@@ -6,28 +6,37 @@ import { toast } from "react-toastify";
 const Login = () => {
   const [email, emailupdate] = useState("");
   const [password, passwordupdate] = useState("");
+  const navigate = useNavigate();
 
-  const usenavigate = useNavigate();
-
-  const ProceedLogin = (e) => {
+  const proceedLogin = (e) => {
     e.preventDefault();
-    let newUser = { email, password };
+    const userCredentials = { email, password };
     if (validate()) {
       fetch("http://localhost:8080/login", {
         method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(newUser),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userCredentials),
       })
         .then((resp) => resp.json())
         .then((data) => {
           if (data.error) {
             toast.error(data.error);
           } else {
-            toast.success("Login Successful");
-            // sessionStorage.setItem("email", email);
-            // sessionStorage.setItem("userrole", data.user.role);
-            localStorage.setItem('currentUser' , JSON.stringify(newUser));
-            usenavigate("/");
+            toast.success("Logged in Successful");
+            if (
+              userCredentials.email === "admin@staynested.co.za" &&
+              userCredentials.password === "Admin@1"
+            ) {
+              // Login as admin, navigate to admin screen
+              navigate("/admin");
+            } else {
+              // Login as regular user, navigate to user dashboard
+              localStorage.setItem(
+                "currentUser",
+                JSON.stringify(userCredentials)
+              );
+              navigate("/");
+            }
           }
         })
         .catch((err) => {
@@ -51,7 +60,7 @@ const Login = () => {
   return (
     <div className="row">
       <div className="offset-lg-3 col-lg-6" style={{ marginTop: "100px" }}>
-        <form onSubmit={ProceedLogin} className="container">
+        <form onSubmit={proceedLogin} className="container">
           <div className="card">
             <div className="card-header">
               <h2>User Login</h2>

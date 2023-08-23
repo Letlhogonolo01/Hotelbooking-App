@@ -5,10 +5,12 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
+import About from "./screens/About";
 import SignUp from "./screens/SignUp";
 import Payment from "./screens/Payment";
 import BookingDetails from "./screens/BookingDetails";
-import About from "./screens/About";
+import ConfirmBooking from "./screens/ConfirmBooking";
+import Admin from "./screens/Admin";
 
 function App() {
   return (
@@ -25,7 +27,12 @@ function App() {
             path="/details/:roomIndex"
             element={<BookingDetails />}
           ></Route>
+          <Route
+            path="/confirm/:roomIndex"
+            element={<ConfirmBooking />}
+          ></Route>
           <Route path="/payment" element={<Payment />}></Route>
+          <Route path="/admin" element={<Admin />}></Route>
           <Route path="/" element={<Footer />}></Route>
         </Routes>
       </BrowserRouter>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
@@ -8,9 +8,9 @@ import Navbar from "../components/Navbar";
 import roomData from "../components/Rooms";
 
 function BookingDetails() {
-  // Get room data based on index
   const { roomIndex } = useParams();
   const room = roomData[roomIndex];
+  const navigate = useNavigate();
 
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
@@ -26,10 +26,28 @@ function BookingDetails() {
     }
   };
 
+  const handleConfirmBooking = () => {
+    const calculatedTotalAmount  = calculateTotalAmount(
+      room.pricePerNight,
+      checkInDate,
+      checkOutDate
+    );
+
+    const bookingDetails = {
+      room: room,
+      checkInDate: checkInDate,
+      checkOutDate: checkOutDate,
+      numOfGuests: numOfGuests,
+      totalAmount: calculatedTotalAmount,
+    };
+
+    navigate(`/confirm/${roomIndex}`, { state: bookingDetails });
+  };
+
   const totalAmount = calculateTotalAmount(
     room.pricePerNight,
     checkInDate,
-    checkOutDate,
+    checkOutDate
   );
 
   return (
@@ -53,7 +71,9 @@ function BookingDetails() {
             <div className="card-body">
               <h5 className="card-title">{room.title}</h5>
               <p className="card-text">{room.description}</p>
-              <p className="card-text">Price per Night: R{room.pricePerNight}</p>
+              <p className="card-text">
+                Price per Night: R{room.pricePerNight}
+              </p>
               <div className="date-picker-container">
                 <div className="align-left">
                   <p>Select Check-in Date:</p>
@@ -99,9 +119,12 @@ function BookingDetails() {
               <div className="total-amount">
                 <p>Total Amount: R{totalAmount}</p>
               </div>
-              <Link to="/payment" className="btn btn-primary">
+              <button
+                className="btn btn-primary"
+                onClick={handleConfirmBooking}
+              >
                 Confirm Booking
-              </Link>
+              </button>
             </div>
           </div>
         </div>
