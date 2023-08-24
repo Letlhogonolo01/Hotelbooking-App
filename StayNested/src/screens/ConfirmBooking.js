@@ -3,7 +3,9 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import roomData from "../components/Rooms";
+import Navbar from "../components/Navbar";
 import PaymentButton from "../components/PaymentButton";
+
 
 function ConfirmBooking() {
   const { roomIndex } = useParams();
@@ -13,11 +15,11 @@ function ConfirmBooking() {
 
   return (
     <>
+      <Navbar />
       <br />
       <Link to={`/details/${roomIndex}`} className="back-icon">
-        <FontAwesomeIcon icon={faArrowLeft} /> Back
+        <FontAwesomeIcon icon={faArrowLeft} />
       </Link>
-      <h2>Confirmation</h2>
       <div className="card mb-3" style={{ margin: 10 }}>
         <div className="row g-0">
           <div className="col-md-5">
@@ -36,7 +38,13 @@ function ConfirmBooking() {
               <p>Check-out Date: {bookingDetails.checkOutDate}</p>
               <p>Number of Guests: {bookingDetails.numOfGuests}</p>
               <p>Total Amount: R{bookingDetails.totalAmount}</p>
-              <PaymentButton />
+              <PaymentButton
+                booking={{
+                  id:roomIndex,
+                  checkInDate:bookingDetails.checkInDate,
+                  checkOutDate:bookingDetails.checkOutDate,
+                }}
+              />
             </div>
           </div>
         </div>

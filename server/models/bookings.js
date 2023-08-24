@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const roomsSchema = new mongoose.Schema({
+const bookingsSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
@@ -26,12 +26,12 @@ const roomsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  pricePerNight: {
+  totalAmount: {
     type: String,
     required: true,
   },
 });
 
-const Room = mongoose.model("Rooms", roomsSchema);
+const booking = mongoose.model("bookings", bookingsSchema);
 
-module.exports = Room;
+module.exports = booking;

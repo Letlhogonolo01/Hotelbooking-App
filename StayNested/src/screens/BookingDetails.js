@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCalendar } from "@fortawesome/free-solid-svg-icons";
-import DatePicker from "react-datepicker";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import calculateTotalAmount from "../components/TotalAmount";
 import Navbar from "../components/Navbar";
 import roomData from "../components/Rooms";
@@ -12,8 +11,8 @@ function BookingDetails() {
   const room = roomData[roomIndex];
   const navigate = useNavigate();
 
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
   const [numOfGuests, setNumOfGuests] = useState(1);
 
   const handleIncrement = () => {
@@ -27,7 +26,7 @@ function BookingDetails() {
   };
 
   const handleConfirmBooking = () => {
-    const calculatedTotalAmount  = calculateTotalAmount(
+    const calculatedTotalAmount = calculateTotalAmount(
       room.pricePerNight,
       checkInDate,
       checkOutDate
@@ -35,11 +34,29 @@ function BookingDetails() {
 
     const bookingDetails = {
       room: room,
+      image: room.image,
       checkInDate: checkInDate,
       checkOutDate: checkOutDate,
       numOfGuests: numOfGuests,
       totalAmount: calculatedTotalAmount,
     };
+    console.log(bookingDetails);
+
+    const booking = {
+      image: room.image,
+      title: room.title,
+      description: room.description,
+      checkin: checkInDate,
+      checkout: checkOutDate,
+      numberOfGuests: numOfGuests,
+      totalAmount: calculatedTotalAmount,
+    };
+
+    fetch("http://localhost:8080/booking", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(booking),
+    });
 
     navigate(`/confirm/${roomIndex}`, { state: bookingDetails });
   };
@@ -55,7 +72,7 @@ function BookingDetails() {
       <Navbar />
       <br />
       <Link to="/" className="back-icon">
-        <FontAwesomeIcon icon={faArrowLeft} /> Back
+        <FontAwesomeIcon icon={faArrowLeft} />
       </Link>
       <div className="card mb-3" style={{ margin: 10 }}>
         <div className="row g-0">
@@ -75,29 +92,35 @@ function BookingDetails() {
                 Price per Night: R{room.pricePerNight}
               </p>
               <div className="date-picker-container">
-                <div className="align-left">
-                  <p>Select Check-in Date:</p>
-                </div>
                 <div className="date-picker">
-                  <FontAwesomeIcon icon={faCalendar} />
-                  <DatePicker
-                    selected={checkInDate}
-                    placeholderText="Select Date:"
-                    onChange={(date) => setCheckInDate(date)}
-                  />
+                  <label
+                    className="align-left"
+                    style={{ marginBottom: "10px" }}
+                  >
+                    Select Check-in Date:
+                    <br />
+                    <input
+                      type="date"
+                      value={checkInDate}
+                      onChange={(event) => setCheckInDate(event.target.value)}
+                    />
+                  </label>
                 </div>
               </div>
               <div className="date-picker-container">
-                <div className="align-left">
-                  <p>Select Check-out Date:</p>
-                </div>
                 <div className="date-picker">
-                  <FontAwesomeIcon icon={faCalendar} />
-                  <DatePicker
-                    selected={checkOutDate}
-                    placeholderText="Select Date: "
-                    onChange={(date) => setCheckOutDate(date)}
-                  />
+                  <label
+                    className="align-left"
+                    style={{ marginBottom: "10px" }}
+                  >
+                    Select Check-out Date:
+                    <br />
+                    <input
+                      type="date"
+                      value={checkOutDate}
+                      onChange={(event) => setCheckOutDate(event.target.value)}
+                    />
+                  </label>
                 </div>
               </div>
               <div className="guest-counter">

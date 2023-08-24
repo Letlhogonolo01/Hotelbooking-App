@@ -42,18 +42,23 @@ function Navbar() {
             <ul className="navbar-nav me-5">
               {user ? (
                 <>
-                  <div class="dropdown">
+                  <div className="dropdown">
                     <button
-                      class="btn btn-secondary dropdown-toggle"
+                      className="btn btn-secondary dropdown-toggle"
                       type="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <i class="fa fa-user"></i> {user.full_name}
+                      <i className="fa fa-user"></i> {user.full_name}
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul className="dropdown-menu">
                       <li>
-                        <a class="dropdown-item" onClick={logout}>
+                        <a className="dropdown-item" href="/">
+                          Profile
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="/login" onClick={logout}>
                           Logout
                         </a>
                       </li>

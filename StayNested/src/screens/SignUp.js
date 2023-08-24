@@ -62,6 +62,7 @@ const SignUp = () => {
         });
     }
   };
+  
   return (
     <div>
       <div className="offset-lg-3 col-lg-6">

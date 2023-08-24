@@ -4,29 +4,39 @@ const cors = require("cors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const User = require("./models/user");
-// const Admin = require("./models/admin")
+const Booking = require("./models/bookings");
 
 const app = express();
+
+// This is the Middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
 
+// MongoDB Connection
 mongoose.connect("mongodb://127.0.0.1:27017/stay-nested");
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 const storeItems = new Map([
-  [1, { priceInCents: 10000, name: "Learn React Today" }],
-  [2, { priceInCents: 20000, name: "Learn CSS Today" }],
+  [1, { priceInCents: 100000, name: "Standard" }],
+  [2, { priceInCents: 130000, name: "Single" }],
+  [3, { priceInCents: 160000, name: "Delux" }],
+  [4, { priceInCents: 200000, name: "Family" }],
+  [5, { priceInCents: 250000, name: "Suite" }],
+  [6, { priceInCents: 320000, name: "Presidential Suite" }],
 ]);
 
+// This API is for the Strpe payment //
 app.post("/create-checkout-session", async (req, res) => {
+  console.log("server.js line:28 req.body", req.body);
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       line_items: req.body.items.map((item) => {
         const storeItem = storeItems.get(item.id);
+        console.log("server.js line:39 item.id", storeItems.get(item.id));
         return {
           price_data: {
             currency: "zar",
@@ -43,6 +53,7 @@ app.post("/create-checkout-session", async (req, res) => {
     });
     res.json({ url: session.url });
   } catch (e) {
+    console.log('server.js line:55 e',e)
     res.status(500).json({ error: e.message });
   }
 });
@@ -51,6 +62,7 @@ app.get("/", (req, res) => {
   res.send("hi server");
 });
 
+// This API is for getting all the Users //
 app.get("/userdata", async (req, res) => {
   try {
     // Retrieve all users from the database
@@ -64,6 +76,7 @@ app.get("/userdata", async (req, res) => {
   }
 });
 
+// This API is for Signing up //
 app.post("/signup", async (req, res) => {
   try {
     const { full_name, email, password, phone } = req.body;
@@ -87,6 +100,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// This API is for Login //
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -115,6 +129,42 @@ app.post("/login", async (req, res) => {
     res.status(200).json({ message: "User login successful", user });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while logging in" });
+  }
+});
+
+// This API is for Booking //
+app.post("/booking", async (req, res) => {
+  try {
+    // Extract the data from the request body
+    const {
+      image,
+      title,
+      description,
+      checkin,
+      checkout,
+      numberOfGuests,
+      totalAmount,
+    } = req.body;
+
+    // Create a new booking using the Booking model
+    const newBooking = new Booking({
+      image,
+      title,
+      description,
+      checkin,
+      checkout,
+      numberOfGuests,
+      totalAmount,
+    });
+
+    // Save the new booking to the database
+    const savedBooking = await newBooking.save();
+
+    res
+      .status(201)
+      .json({ message: "Booking added successfully", booking: savedBooking });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while adding booking" });
   }
 });
 

@@ -11,6 +11,9 @@ import Payment from "./screens/Payment";
 import BookingDetails from "./screens/BookingDetails";
 import ConfirmBooking from "./screens/ConfirmBooking";
 import Admin from "./screens/Admin";
+import Success from "./components/Success";
+import Cancel from "./components/Cancel";
+import Profile from "./screens/Profile";
 
 function App() {
   return (
@@ -23,6 +26,7 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
           <Route
             path="/details/:roomIndex"
             element={<BookingDetails />}
@@ -33,6 +37,8 @@ function App() {
           ></Route>
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/admin" element={<Admin />}></Route>
+          <Route path="/success" element={<Success />}></Route>
+          <Route path="/cancel" element={<Cancel />}></Route>
           <Route path="/" element={<Footer />}></Route>
         </Routes>
       </BrowserRouter>
