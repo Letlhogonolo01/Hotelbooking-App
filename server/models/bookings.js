@@ -5,10 +5,17 @@ const bookingsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  full_name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
-    unique: true,
   },
   description: {
     type: String,

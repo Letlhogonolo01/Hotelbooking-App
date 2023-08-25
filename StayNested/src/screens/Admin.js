@@ -3,7 +3,7 @@ import mockRooms from "../components/mockData";
 
 function Admin() {
   function logout() {
-    window.location.href = "login";
+    window.location.href = "/login";
   }
 
   return (
@@ -14,6 +14,7 @@ function Admin() {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Room Image</th>
               <th>Custer Name</th>
               <th>Room Name</th>
               <th>Number of Guests</th>
@@ -27,6 +28,7 @@ function Admin() {
             {mockRooms.map((room) => (
               <tr key={room.id}>
                 <td>{room.id}</td>
+                <td>{room.image}</td>
                 <td>{room.customerName}</td>
                 <td>{room.roomName}</td>
                 <td>{room.numberOfGuests}</td>

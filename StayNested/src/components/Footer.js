@@ -4,8 +4,8 @@ function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <div class="card text-center">
-      <div class="card-footer text-body-secondary">{`Copyright © StayNested ${year}`}</div>
+    <div className="card text-center">
+      <div className="card-footer text-body-secondary">{`Copyright © StayNested ${year}`}</div>
     </div>
   );
 }

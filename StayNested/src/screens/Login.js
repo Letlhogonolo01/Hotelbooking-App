@@ -1,41 +1,44 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const [email, emailupdate] = useState("");
-  const [password, passwordupdate] = useState("");
+  const [email, emailchange] = useState("");
+  const [password, passwordchange] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      console.log(parsedUser);
+    }
+  }, []);
 
   const proceedLogin = (e) => {
     e.preventDefault();
-    const userCredentials = { email, password };
+    const user = { email, password };
     if (validate()) {
       fetch("http://localhost:8080/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userCredentials),
+        body: JSON.stringify(user),
       })
         .then((resp) => resp.json())
         .then((data) => {
+          console.log("Login response:", data);
           if (data.error) {
             toast.error(data.error);
           } else {
-            toast.success("Logged in Successful");
-            if (
-              userCredentials.email === "admin@staynested.co.za" &&
-              userCredentials.password === "Admin@1"
-            ) {
-              // Login as admin, navigate to admin screen
+            if (data.message === "Admin login successful") {
+              // Handle admin login here
+              localStorage.setItem("currentUser", JSON.stringify({ email: user.email }));
               navigate("/admin");
-            } else {
-              // Login as regular user, navigate to user dashboard
-              localStorage.setItem(
-                "currentUser",
-                JSON.stringify(userCredentials)
-              );
+              toast.success("Admin Logged in Successful");
+            } else if (data.message === "User login successful") {
+              localStorage.setItem("currentUser", JSON.stringify(data.user));
               navigate("/");
+              toast.success("Logged in Successful");
             }
           }
         })
@@ -72,7 +75,7 @@ const Login = () => {
                 </label>
                 <input
                   value={email}
-                  onChange={(e) => emailupdate(e.target.value)}
+                  onChange={(e) => emailchange(e.target.value)}
                   className="form-control"
                 ></input>
               </div>
@@ -83,7 +86,7 @@ const Login = () => {
                 <input
                   type="password"
                   value={password}
-                  onChange={(e) => passwordupdate(e.target.value)}
+                  onChange={(e) => passwordchange(e.target.value)}
                   className="form-control"
                 ></input>
               </div>

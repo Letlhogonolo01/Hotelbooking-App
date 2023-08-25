@@ -1,11 +1,12 @@
 import React from "react";
 
 function Navbar() {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser = localStorage.getItem("currentUser");
+  const user = currentUser ? JSON.parse(currentUser) : null;
 
   function logout() {
     localStorage.removeItem("currentUser");
-    window.location.href = "login";
+    window.location.href = "/login";
   }
 
   return (
@@ -52,11 +53,6 @@ function Navbar() {
                       <i className="fa fa-user"></i> {user.full_name}
                     </button>
                     <ul className="dropdown-menu">
-                      <li>
-                        <a className="dropdown-item" href="/">
-                          Profile
-                        </a>
-                      </li>
                       <li>
                         <a className="dropdown-item" href="/login" onClick={logout}>
                           Logout

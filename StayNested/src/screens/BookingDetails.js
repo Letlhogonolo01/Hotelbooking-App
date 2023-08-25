@@ -25,6 +25,9 @@ function BookingDetails() {
     }
   };
 
+  const currentUser = localStorage.getItem("currentUser");
+  const user = currentUser ? JSON.parse(currentUser) : null;
+
   const handleConfirmBooking = () => {
     const calculatedTotalAmount = calculateTotalAmount(
       room.pricePerNight,
@@ -44,6 +47,8 @@ function BookingDetails() {
 
     const booking = {
       image: room.image,
+      full_name: user.full_name,
+      email: user.email,
       title: room.title,
       description: room.description,
       checkin: checkInDate,
@@ -51,6 +56,7 @@ function BookingDetails() {
       numberOfGuests: numOfGuests,
       totalAmount: calculatedTotalAmount,
     };
+    console.log('bt.js line:59 user.full_name', user.full_name)
 
     fetch("http://localhost:8080/booking", {
       method: "POST",

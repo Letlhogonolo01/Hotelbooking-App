@@ -101,8 +101,11 @@
 .align-left {
   text-align: left;
 }
+
 /* Admin.css */
 .admin-container {
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
@@ -126,6 +129,7 @@
 .room-table td {
   padding: 10px;
   border-bottom: 1px solid #e0e0e0;
+  text-align: center;
 }
 
 .room-table th {
@@ -147,9 +151,13 @@
   background-color: #dc3545;
 }
 
-.logout-button{
-  align-items: left;
+.logout-button {
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 
 
 @keyframes App-logo-spin {

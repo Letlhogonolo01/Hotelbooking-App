@@ -45,24 +45,27 @@ const SignUp = () => {
 
   const handlesubmit = (e) => {
     e.preventDefault();
-    let newUser = { full_name, email, password, phone };
+    let user = { full_name, email, password, phone };
     if (IsValidate()) {
-      //console.log(regobj);
+      console.log("signup.js line:50 user", user);
       fetch("http://localhost:8080/signup", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(newUser),
+        body: JSON.stringify(user),
       })
-        .then((res) => {
+        .then((res) => res.json())
+        .then((data) => {
+          const user = data.user;
+          localStorage.setItem("currentUser", JSON.stringify(user));
           toast.success("Registered successfully.");
           navigate("/login");
         })
         .catch((err) => {
-          toast.error("Failed :" + err.message);
+          toast.error("Failed: " + err.message);
         });
     }
   };
-  
+
   return (
     <div>
       <div className="offset-lg-3 col-lg-6">

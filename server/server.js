@@ -19,12 +19,12 @@ mongoose.connect("mongodb://127.0.0.1:27017/stay-nested");
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 const storeItems = new Map([
-  [1, { priceInCents: 100000, name: "Standard" }],
-  [2, { priceInCents: 130000, name: "Single" }],
-  [3, { priceInCents: 160000, name: "Delux" }],
-  [4, { priceInCents: 200000, name: "Family" }],
-  [5, { priceInCents: 250000, name: "Suite" }],
-  [6, { priceInCents: 320000, name: "Presidential Suite" }],
+  [0, { priceInCents: 100000, name: "Standard" }],
+  [1, { priceInCents: 130000, name: "Single" }],
+  [2, { priceInCents: 160000, name: "Delux" }],
+  [3, { priceInCents: 200000, name: "Family" }],
+  [4, { priceInCents: 250000, name: "Suite" }],
+  [5, { priceInCents: 320000, name: "Presidential Suite" }],
 ]);
 
 // This API is for the Strpe payment //
@@ -53,7 +53,7 @@ app.post("/create-checkout-session", async (req, res) => {
     });
     res.json({ url: session.url });
   } catch (e) {
-    console.log('server.js line:55 e',e)
+    console.log("server.js line:55 e", e);
     res.status(500).json({ error: e.message });
   }
 });
@@ -78,23 +78,21 @@ app.get("/userdata", async (req, res) => {
 
 // This API is for Signing up //
 app.post("/signup", async (req, res) => {
+  const { full_name, email, password, phone } = req.body;
+  // Create a new user using the User model
+  const newUser = new User({
+    full_name,
+    email,
+    password,
+    phone,
+  });
   try {
-    const { full_name, email, password, phone } = req.body;
-
-    // Create a new user using the User model
-    const newUser = new User({
-      full_name,
-      email,
-      password,
-      phone,
-    });
-
     // Save the new user to the database
-    const savedUser = await newUser.save();
+    const user = await newUser.save();
 
     res
       .status(201)
-      .json({ message: "User registered successfully", user: savedUser });
+      .json({ message: "User registered successfully", user: user });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while signing up" });
   }
@@ -112,7 +110,7 @@ app.post("/login", async (req, res) => {
     }
 
     // For non-admin users, perform the regular user login check
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email, password: password });
 
     if (!user || user.password !== password) {
       return res.status(401).json({ error: "Invalid email or password" });
@@ -124,13 +122,13 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "An error occurred while logging in" });
   }
 });
-app.post("/login", async (req, res) => {
-  try {
-    res.status(200).json({ message: "User login successful", user });
-  } catch (error) {
-    res.status(500).json({ error: "An error occurred while logging in" });
-  }
-});
+// app.post("/login", async (req, res) => {
+//   try {
+//     res.status(200).json({ message: "User login successful", user });
+//   } catch (error) {
+//     res.status(500).json({ error: "An error occurred while logging in" });
+//   }
+// });
 
 // This API is for Booking //
 app.post("/booking", async (req, res) => {
@@ -138,6 +136,8 @@ app.post("/booking", async (req, res) => {
     // Extract the data from the request body
     const {
       image,
+      full_name,
+      email,
       title,
       description,
       checkin,
@@ -145,10 +145,13 @@ app.post("/booking", async (req, res) => {
       numberOfGuests,
       totalAmount,
     } = req.body;
+    console.log("server.js line:148 req.body", req.body);
 
     // Create a new booking using the Booking model
     const newBooking = new Booking({
       image,
+      full_name,
+      email,
       title,
       description,
       checkin,
@@ -164,9 +167,11 @@ app.post("/booking", async (req, res) => {
       .status(201)
       .json({ message: "Booking added successfully", booking: savedBooking });
   } catch (error) {
-    res.status(500).json({ error: "An error occurred while adding booking" });
+    res.status(500).json({ error: error });
   }
 });
+
+app.get("/userbookings", async (req, res) =>{});
 
 app.listen(8080, () => {
   console.log(
