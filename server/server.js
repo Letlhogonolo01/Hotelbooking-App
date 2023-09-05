@@ -122,14 +122,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "An error occurred while logging in" });
   }
 });
-// app.post("/login", async (req, res) => {
-//   try {
-//     res.status(200).json({ message: "User login successful", user });
-//   } catch (error) {
-//     res.status(500).json({ error: "An error occurred while logging in" });
-//   }
-// });
-
 // This API is for Booking //
 app.post("/booking", async (req, res) => {
   try {
@@ -171,7 +163,47 @@ app.post("/booking", async (req, res) => {
   }
 });
 
-app.get("/userbookings", async (req, res) =>{});
+// This API is for getting all the User Bookings
+app.get("/userbookings", async (req, res) => {
+  try {
+    // Retrieve all bookings from the database
+    const bookings = await Booking.find();
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while fetching user bookings" });
+  }
+});
+
+// This API is for updating the User Bookings
+app.put("/userbookings/:bookingId", async (req, res) => {
+  try {
+    // Get the booking ID from the request parameters
+    const bookingId = req.params.bookingId;
+
+    // Extract the updated booking data from the request body
+    const updatedBookingData = req.body;
+
+    // Use Mongoose to find the booking by ID and update it
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      updatedBookingData,
+      { new: true } // This option returns the updated booking
+    );
+
+    if (!updatedBooking) {
+      // If the booking is not found, return a 404 status
+      return res.status(404).json({ error: "Booking not found" });
+    }
+
+    // Send a success response with the updated booking data
+    res.status(200).json({ message: "Booking updated successfully", booking: updatedBooking });
+  } catch (error) {
+    // Handle any errors that may occur during the update process
+    res.status(500).json({ error: "An error occurred while updating the booking" });
+  }
+});
+
 
 app.listen(8080, () => {
   console.log(
