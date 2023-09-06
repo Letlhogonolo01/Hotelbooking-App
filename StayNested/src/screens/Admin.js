@@ -58,7 +58,11 @@ function Admin() {
     });
 
     // Recalculate the total amount when relevant fields change
-    if (name === "numberOfGuests" || name === "checkin" || name === "checkout") {
+    if (
+      name === "numberOfGuests" ||
+      name === "checkin" ||
+      name === "checkout"
+    ) {
       calculateTotal();
     }
   }
@@ -67,7 +71,7 @@ function Admin() {
   function calculateTotal() {
     // Implement your calculation logic here based on formData
     // Example calculation: totalAmount = basePrice * numberOfGuests + additionalFees
-    const basePrice = 100; // Replace with your base price
+    const basePrice = 1000; // Replace with your base price
     const additionalFees = 50; // Replace with any additional fees
 
     const totalAmount =
@@ -127,6 +131,43 @@ function Admin() {
     setIsEditing(false);
   }
 
+  // Function to handle delete confirmation
+  function handleDeleteConfirmation(bookingId) {
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this booking?"
+    );
+    if (confirmation) {
+      // If the admin confirms, proceed with the deletion
+      handleDeleteClick(bookingId);
+    } else {
+      // If the admin cancels, do nothing
+    }
+  }
+
+  // Function to handle deleting the booking
+  async function handleDeleteClick(bookingId) {
+    try {
+      // Send a DELETE request to delete the booking by its ID
+      const response = await fetch(
+        `http://localhost:8080/userbookings/${bookingId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        // Remove the deleted booking from the state
+        setBookings((prevBookings) =>
+          prevBookings.filter((booking) => booking._id !== bookingId)
+        );
+      } else {
+        console.error("Error deleting booking");
+      }
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+    }
+  }
+
   return (
     <div className="admin-container">
       <h2>Admin Dashboard</h2>
@@ -172,7 +213,12 @@ function Admin() {
                     >
                       Edit
                     </button>
-                    <button className="delete-button">Delete</button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteConfirmation(booking._id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

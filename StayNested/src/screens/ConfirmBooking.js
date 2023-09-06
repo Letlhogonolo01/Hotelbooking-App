@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -6,12 +6,26 @@ import roomData from "../components/Rooms";
 import Navbar from "../components/Navbar";
 import PaymentButton from "../components/PaymentButton";
 
-
 function ConfirmBooking() {
   const { roomIndex } = useParams();
   const room = roomData[roomIndex];
   const location = useLocation();
   const bookingDetails = location.state;
+
+  useEffect(() => {
+    // Check the URL path to determine success or cancellation
+    if (window.location.pathname === "/home-success") {
+      // Show a pop-up alert for successful booking
+      alert("Congratulations! Your booking was successful.");
+      // Redirect to the home screen
+      window.location.href = "/";
+    } else if (window.location.pathname === "/home-cancel") {
+      // Show a pop-up alert for booking cancellation
+      alert("Your booking has been canceled.");
+      // Redirect to the ConfirmBooking screen
+      window.location.href = "/";
+    }
+  }, [roomIndex]);
 
   return (
     <>
@@ -40,9 +54,9 @@ function ConfirmBooking() {
               <p>Total Amount: R{bookingDetails.totalAmount}</p>
               <PaymentButton
                 booking={{
-                  id:roomIndex,
-                  checkInDate:bookingDetails.checkInDate,
-                  checkOutDate:bookingDetails.checkOutDate,
+                  id: roomIndex,
+                  checkInDate: bookingDetails.checkInDate,
+                  checkOutDate: bookingDetails.checkOutDate,
                 }}
               />
             </div>

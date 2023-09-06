@@ -48,8 +48,8 @@ app.post("/create-checkout-session", async (req, res) => {
           quantity: item.quantity,
         };
       }),
-      success_url: `${process.env.CLIENT_URL}/success`,
-      cancel_url: `${process.env.CLIENT_URL}/cancel`,
+      success_url: "http://localhost:3000/",
+      cancel_url: "http://localhost:3000/",
     });
     res.json({ url: session.url });
   } catch (e) {
@@ -171,7 +171,9 @@ app.get("/userbookings", async (req, res) => {
 
     res.status(200).json(bookings);
   } catch (error) {
-    res.status(500).json({ error: "An error occurred while fetching user bookings" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching user bookings" });
   }
 });
 
@@ -197,13 +199,39 @@ app.put("/userbookings/:bookingId", async (req, res) => {
     }
 
     // Send a success response with the updated booking data
-    res.status(200).json({ message: "Booking updated successfully", booking: updatedBooking });
+    res.status(200).json({
+      message: "Booking updated successfully",
+      booking: updatedBooking,
+    });
   } catch (error) {
     // Handle any errors that may occur during the update process
-    res.status(500).json({ error: "An error occurred while updating the booking" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the booking" });
   }
 });
 
+// This API is for deleting a specific User Booking by ID
+app.delete("/userbookings/:bookingId", async (req, res) => {
+  try {
+    // Get the booking ID from the request parameters
+    const bookingId = req.params.bookingId;
+
+    // Use Mongoose to delete the booking by ID
+    const deletedBooking = await Booking.findByIdAndDelete(bookingId);
+
+    if (!deletedBooking) {
+      // If the booking is not found, return a 404 status
+      return res.status(404).json({ error: "Booking not found" });
+    }
+
+    res.status(200).json({ message: "Booking deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the booking" });
+  }
+});
 
 app.listen(8080, () => {
   console.log(
