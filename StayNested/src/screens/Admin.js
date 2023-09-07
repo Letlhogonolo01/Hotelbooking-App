@@ -25,7 +25,7 @@ function Admin() {
       .catch((error) => {
         console.error("Error fetching user bookings:", error);
       });
-  }, []); // Empty dependency array to fetch data once on component mount
+  }, []); 
 
   function logout() {
     window.location.href = "/login";
@@ -59,7 +59,6 @@ function Admin() {
 
     // Recalculate the total amount when relevant fields change
     if (
-      name === "numberOfGuests" ||
       name === "checkin" ||
       name === "checkout"
     ) {
@@ -67,15 +66,14 @@ function Admin() {
     }
   }
 
-  // Function to calculate the total amount based on numberOfGuests, checkin, and checkout
+  // Function to calculate the total amount based on checkin, and checkout
   function calculateTotal() {
     // Implement your calculation logic here based on formData
-    // Example calculation: totalAmount = basePrice * numberOfGuests + additionalFees
+    // Example calculation: totalAmount = basePrice 
     const basePrice = 1000; // Replace with your base price
-    const additionalFees = 50; // Replace with any additional fees
 
     const totalAmount =
-      basePrice * parseInt(formData.numberOfGuests, 10) + additionalFees;
+      basePrice * parseInt(formData, 10);
 
     setFormData({
       ...formData,
@@ -249,15 +247,6 @@ function Admin() {
                 />
               </div>
               <div>
-                <label>Room Name:</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div>
                 <label>Check-In Date:</label>
                 <input
                   type="date"
@@ -293,8 +282,12 @@ function Admin() {
                   readOnly
                 />
               </div>
-              <button onClick={handleUpdateClick}>Update</button>
-              <button onClick={handleCancelClick}>Cancel</button>
+              <button className="update-button btn btn-success" onClick={handleUpdateClick}>
+                Update
+              </button>
+              <button className="cancel-button btn btn-danger" onClick={handleCancelClick}>
+                Cancel
+              </button>
             </form>
           </div>
         )}
