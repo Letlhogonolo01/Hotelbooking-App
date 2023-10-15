@@ -8,6 +8,7 @@ import Login from "./screens/Login";
 import About from "./screens/About";
 import SignUp from "./screens/SignUp";
 import Payment from "./screens/Payment";
+import AddRoom from "./screens/AddRoom";
 import BookingDetails from "./screens/BookingDetails";
 import ConfirmBooking from "./screens/ConfirmBooking";
 import Admin from "./screens/Admin";
@@ -37,6 +38,7 @@ function App() {
           ></Route>
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/admin" element={<Admin />}></Route>
+          <Route path="/rooms" element={<AddRoom />}></Route>
           <Route path="/success" element={<Success />}></Route>
           <Route path="/cancel" element={<Cancel />}></Route>
           <Route path="/" element={<Footer />}></Route>
