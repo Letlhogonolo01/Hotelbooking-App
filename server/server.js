@@ -35,20 +35,11 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "uploads"));
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, Date.now() + "-" + file.originalname); // Use originalname for filename
   },
 });
 
 const upload = multer({ storage: storage });
-
-// const Room = mongoose.model("Room", {
-//   image: String,
-//   title: String,
-//   description: String,
-//   pricePerNight: String,
-// });
-
-app.use(express.json());
 
 // This API is for the Strpe payment //
 app.post("/create-checkout-session", async (req, res) => {
@@ -256,7 +247,31 @@ app.delete("/userbookings/:bookingId", async (req, res) => {
   }
 });
 
-app.get('/allrooms', async (req, res) => {
+// Example route to add a room
+app.post("/rooms", upload.single("image"), async (req, res) => {
+  try {
+    const { title, description, pricePerNight } = req.body;
+    const imagePath = req.file.filename; // Assuming the image path is stored in the 'path' property of the file
+
+    // Create a new room instance
+    const newRoom = new Rooms({
+      image: imagePath,
+      title,
+      description,
+      pricePerNight,
+    });
+
+    // Save the new room to the database
+    const savedRoom = await newRoom.save();
+
+    res.json(savedRoom);
+  } catch (error) {
+    console.error("Error adding room:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/rooms", async (req, res) => {
   try {
     // Retrieve all rooms from the database
     const rooms = await Rooms.find();
@@ -266,26 +281,6 @@ app.get('/allrooms', async (req, res) => {
   } catch (error) {
     // Handle any errors that may occur during the retrieval
     res.status(500).json({ error: "An error occurred while fetching rooms" });
-  }
-});
-
-app.post("/rooms", upload.single("image"), async (req, res) => {
-  try {
-    const { title, description, pricePerNight } = req.body;
-    const imagePath = req.file.path;
-
-    const newRoom = new Rooms({
-      image: imagePath,
-      title,
-      description,
-      pricePerNight,
-    });
-
-    const savedRoom = await newRoom.save();
-    res.json(savedRoom);
-  } catch (error) {
-    console.error("Error adding room:", error);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

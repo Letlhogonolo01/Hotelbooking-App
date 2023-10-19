@@ -26,7 +26,7 @@ function Admin() {
       .catch((error) => {
         console.error("Error fetching user bookings:", error);
       });
-  }, []); 
+  }, []);
 
   function logout() {
     window.location.href = "/login";
@@ -59,10 +59,7 @@ function Admin() {
     });
 
     // Recalculate the total amount when relevant fields change
-    if (
-      name === "checkin" ||
-      name === "checkout"
-    ) {
+    if (name === "checkin" || name === "checkout") {
       calculateTotal();
     }
   }
@@ -70,11 +67,10 @@ function Admin() {
   // Function to calculate the total amount based on checkin, and checkout
   function calculateTotal() {
     // Implement your calculation logic here based on formData
-    // Example calculation: totalAmount = basePrice 
+    // Example calculation: totalAmount = basePrice
     const basePrice = 1000; // Replace with your base price
 
-    const totalAmount =
-      basePrice * parseInt(formData, 10);
+    const totalAmount = basePrice * parseInt(formData, 10);
 
     setFormData({
       ...formData,
@@ -171,6 +167,9 @@ function Admin() {
     <div className="admin-container">
       <h2>Admin Dashboard</h2>
       <div className="admin-card">
+        <Link to="/rooms" className="btn btn-success">
+          Add Room
+        </Link>
         <div className="table-responsive">
           <table className="room-table">
             <thead>
@@ -288,10 +287,16 @@ function Admin() {
                   readOnly
                 />
               </div>
-              <button className="update-button btn btn-success" onClick={handleUpdateClick}>
+              <button
+                className="update-button btn btn-success"
+                onClick={handleUpdateClick}
+              >
                 Update
               </button>
-              <button className="cancel-button btn btn-danger" onClick={handleCancelClick}>
+              <button
+                className="cancel-button btn btn-danger"
+                onClick={handleCancelClick}
+              >
                 Cancel
               </button>
             </form>
