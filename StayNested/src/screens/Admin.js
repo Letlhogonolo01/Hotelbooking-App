@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Admin() {
   const [bookings, setBookings] = useState([]);
@@ -173,6 +174,11 @@ function Admin() {
         <div className="table-responsive">
           <table className="room-table">
             <thead>
+              <tr>
+              <Link to="/addroom" className="btn btn-success">
+              Add Room
+            </Link>
+              </tr>
               <tr>
                 <th>ID</th>
                 <th>Room Image</th>

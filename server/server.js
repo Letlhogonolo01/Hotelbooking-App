@@ -2,9 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const multer = require("multer"); 
+const path = require("path");
 const mongoose = require("mongoose");
 const User = require("./models/user");
 const Booking = require("./models/bookings");
+const Rooms = require("./models/rooms");
 
 const app = express();
 
@@ -26,6 +29,26 @@ const storeItems = new Map([
   [4, { priceInCents: 250000, name: "Suite" }],
   [5, { priceInCents: 320000, name: "Presidential Suite" }],
 ]);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "uploads"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// const Room = mongoose.model("Room", {
+//   image: String,
+//   title: String,
+//   description: String,
+//   pricePerNight: String,
+// });
+
+app.use(express.json());
 
 // This API is for the Strpe payment //
 app.post("/create-checkout-session", async (req, res) => {
@@ -230,6 +253,39 @@ app.delete("/userbookings/:bookingId", async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while deleting the booking" });
+  }
+});
+
+app.get('/allrooms', async (req, res) => {
+  try {
+    // Retrieve all rooms from the database
+    const rooms = await Rooms.find();
+
+    // Send the rooms as a JSON response
+    res.status(200).json(rooms);
+  } catch (error) {
+    // Handle any errors that may occur during the retrieval
+    res.status(500).json({ error: "An error occurred while fetching rooms" });
+  }
+});
+
+app.post("/rooms", upload.single("image"), async (req, res) => {
+  try {
+    const { title, description, pricePerNight } = req.body;
+    const imagePath = req.file.path;
+
+    const newRoom = new Rooms({
+      image: imagePath,
+      title,
+      description,
+      pricePerNight,
+    });
+
+    const savedRoom = await newRoom.save();
+    res.json(savedRoom);
+  } catch (error) {
+    console.error("Error adding room:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
