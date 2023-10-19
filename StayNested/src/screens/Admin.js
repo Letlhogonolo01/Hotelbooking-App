@@ -167,14 +167,14 @@ function Admin() {
     <div className="admin-container">
       <h2>Admin Dashboard</h2>
       <div className="admin-card">
-        <Link to="/rooms" className="btn btn-success">
-          Add Room
-        </Link>
+        {/* <Link to="/rooms" className="btn btn-success">
+          Add Roo
+        </Link> */}
         <div className="table-responsive">
           <table className="room-table">
             <thead>
               <tr>
-              <Link to="/addroom" className="btn btn-success">
+              <Link to="/rooms" className="btn btn-success">
               Add Room
             </Link>
               </tr>

@@ -39,7 +39,9 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+// Assuming your images are stored in the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // This API is for the Strpe payment //
 app.post("/create-checkout-session", async (req, res) => {
@@ -246,6 +248,8 @@ app.delete("/userbookings/:bookingId", async (req, res) => {
       .json({ error: "An error occurred while deleting the booking" });
   }
 });
+
+const upload = multer({ storage: storage });
 
 // Example route to add a room
 app.post("/rooms", upload.single("image"), async (req, res) => {
