@@ -127,41 +127,41 @@ function Admin() {
   }
 
   // Function to handle delete confirmation
-  function handleDeleteConfirmation(bookingId) {
-    const confirmation = window.confirm(
-      "Are you sure you want to delete this booking?"
-    );
-    if (confirmation) {
-      // If the admin confirms, proceed with the deletion
-      handleDeleteClick(bookingId);
-    } else {
-      // If the admin cancels, do nothing
-    }
-  }
+  // function handleDeleteConfirmation(bookingId) {
+  //   const confirmation = window.confirm(
+  //     "Are you sure you want to delete this booking?"
+  //   );
+  //   if (confirmation) {
+  //     // If the admin confirms, proceed with the deletion
+  //     handleDeleteClick(bookingId);
+  //   } else {
+  //     // If the admin cancels, do nothing
+  //   }
+  // }
 
   // Function to handle deleting the booking
-  async function handleDeleteClick(bookingId) {
-    try {
-      // Send a DELETE request to delete the booking by its ID
-      const response = await fetch(
-        `http://localhost:8080/userbookings/${bookingId}`,
-        {
-          method: "DELETE",
-        }
-      );
+  // async function handleDeleteClick(bookingId) {
+  //   try {
+  //     // Send a DELETE request to delete the booking by its ID
+  //     const response = await fetch(
+  //       `http://localhost:8080/userbookings/${bookingId}`,
+  //       {
+  //         method: "DELETE",
+  //       }
+  //     );
 
-      if (response.ok) {
-        // Remove the deleted booking from the state
-        setBookings((prevBookings) =>
-          prevBookings.filter((booking) => booking._id !== bookingId)
-        );
-      } else {
-        console.error("Error deleting booking");
-      }
-    } catch (error) {
-      console.error("Error deleting booking:", error);
-    }
-  }
+  //     if (response.ok) {
+  //       // Remove the deleted booking from the state
+  //       setBookings((prevBookings) =>
+  //         prevBookings.filter((booking) => booking._id !== bookingId)
+  //       );
+  //     } else {
+  //       console.error("Error deleting booking");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting booking:", error);
+  //   }
+  // }
 
   return (
     <div className="admin-container">
@@ -216,12 +216,12 @@ function Admin() {
                     >
                       Edit
                     </button>
-                    <button
+                    {/* <button
                       className="delete-button"
                       onClick={() => handleDeleteConfirmation(booking._id)}
                     >
                       Delete
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}

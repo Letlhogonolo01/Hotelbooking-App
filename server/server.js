@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const multer = require("multer"); 
+const multer = require("multer");
 const path = require("path");
 const mongoose = require("mongoose");
 const User = require("./models/user");
@@ -41,7 +41,6 @@ const storage = multer.diskStorage({
 
 // Assuming your images are stored in the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 
 // This API is for the Strpe payment //
 app.post("/create-checkout-session", async (req, res) => {
@@ -275,6 +274,7 @@ app.post("/rooms", upload.single("image"), async (req, res) => {
   }
 });
 
+// This API is for getting all Rooms 
 app.get("/rooms", async (req, res) => {
   try {
     // Retrieve all rooms from the database
@@ -285,6 +285,62 @@ app.get("/rooms", async (req, res) => {
   } catch (error) {
     // Handle any errors that may occur during the retrieval
     res.status(500).json({ error: "An error occurred while fetching rooms" });
+  }
+});
+
+// This API is for updating a specific Room by ID
+app.put("/rooms/:roomId", async (req, res) => {
+  try {
+    // Get the room ID from the request parameters
+    const roomId = req.params.roomId;
+
+    // Extract the updated room data from the request body
+    const updatedRoomData = req.body;
+
+    // Use Mongoose to find the room by ID and update it
+    const updatedRoom = await Rooms.findByIdAndUpdate(
+      roomId,
+      updatedRoomData,
+      { new: true } // This option returns the updated room
+    );
+
+    if (!updatedRoom) {
+      // If the room is not found, return a 404 status
+      return res.status(404).json({ error: "Room not found" });
+    }
+
+    // Send a success response with the updated room data
+    res.status(200).json({
+      message: "Room updated successfully",
+      room: updatedRoom,
+    });
+  } catch (error) {
+    // Handle any errors that may occur during the update process
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the room" });
+  }
+});
+
+// This API is for deleting a specific Room by ID
+app.delete("/rooms/:roomId", async (req, res) => {
+  try {
+    // Get the room ID from the request parameters
+    const roomId = req.params.roomId;
+
+    // Use Mongoose to delete the room by ID
+    const deletedRoom = await Rooms.findByIdAndDelete(roomId);
+
+    if (!deletedRoom) {
+      // If the room is not found, return a 404 status
+      return res.status(404).json({ error: "Room not found" });
+    }
+
+    res.status(200).json({ message: "Room deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the room" });
   }
 });
 
