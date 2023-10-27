@@ -7,8 +7,9 @@ function AddRoom() {
   const [description, setDescription] = useState("");
   const [pricePerNight, setPricePerNight] = useState("");
   const [rooms, setRooms] = useState([]);
-  const [showEditForm, setShowEditForm] = useState(false); // State for showing/hiding the edit form
-  const [editedRoom, setEditedRoom] = useState(null); // State for storing edited room details
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editedRoom, setEditedRoom] = useState(null);
+  const [originalRoom, setOriginalRoom] = useState(null);
   const navigate = useNavigate();
 
   // Fetch rooms from the backend API and update the state
@@ -56,26 +57,38 @@ function AddRoom() {
 
   // Handle room deletion
   const handleDelete = async (roomId) => {
-    try {
-      // Make a DELETE request to your backend API
-      const response = await fetch(`http://localhost:8080/rooms/${roomId}`, {
-        method: "DELETE",
-      });
+    // Display a confirmation dialog
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this room?"
+    );
 
-      if (response.ok) {
-        // If deletion is successful, update the rooms state
-        setRooms((prevRooms) => prevRooms.filter((room) => room._id !== roomId));
-      } else {
-        console.error("Error deleting room");
+    if (confirmDelete) {
+      try {
+        // Make a DELETE request to your backend API
+        const response = await fetch(`http://localhost:8080/rooms/${roomId}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          // If deletion is successful, update the rooms state
+          setRooms((prevRooms) =>
+            prevRooms.filter((room) => room._id !== roomId)
+          );
+        } else {
+          console.error("Error deleting room");
+        }
+      } catch (error) {
+        console.error("Error deleting room:", error);
       }
-    } catch (error) {
-      console.error("Error deleting room:", error);
+    } else {
+      // User clicked cancel, do nothing
     }
   };
 
-   // Handle opening the edit form
-   const handleEdit = (room) => {
+  // Handle opening the edit form
+  const handleEdit = (room) => {
     setEditedRoom(room);
+    setOriginalRoom(room);
     setShowEditForm(true);
   };
 
@@ -87,19 +100,55 @@ function AddRoom() {
 
   // Handle editing the room
   const handleEditSubmit = async () => {
-    // Perform the edit operation with the editedRoom details
-    // Make a PUT request to your backend API
-    // Use editedRoom._id to identify the room to be edited
+    try {
+      // Create an object to store only the fields that have changed
+      const updatedFields = {};
 
-    // After successful edit, update the rooms state
-    setRooms((prevRooms) =>
-      prevRooms.map((room) =>
-        room._id === editedRoom._id ? { ...room, ...editedRoom } : room
-      )
-    );
+      // Check if each field is different from the original data
+      if (editedRoom.title !== originalRoom.title) {
+        updatedFields.title = editedRoom.title;
+      }
 
-    // Close the edit form
-    handleCloseEditForm();
+      if (editedRoom.description !== originalRoom.description) {
+        updatedFields.description = editedRoom.description;
+      }
+
+      if (editedRoom.pricePerNight !== originalRoom.pricePerNight) {
+        updatedFields.pricePerNight = editedRoom.pricePerNight;
+      }
+
+      // Make a PUT request to your backend API with the edited fields
+      const response = await fetch(
+        `http://localhost:8080/rooms/${editedRoom._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedFields),
+        }
+      );
+
+      if (response.ok) {
+        // If the update is successful, you can handle the response as needed
+        const updatedRoom = await response.json();
+        console.log("Room updated successfully:", updatedRoom);
+
+        // After successful edit, update the rooms state
+        setRooms((prevRooms) =>
+          prevRooms.map((room) =>
+            room._id === editedRoom._id ? { ...room, ...updatedRoom } : room
+          )
+        );
+
+        // Close the edit form
+        handleCloseEditForm();
+      } else {
+        console.error("Error updating room");
+      }
+    } catch (error) {
+      console.error("Error updating room:", error);
+    }
   };
 
   return (
@@ -174,8 +223,7 @@ function AddRoom() {
         </div>
       </div>
       <br />
-     {/* Display the newly added rooms */}
-     <div className="col-lg-12">
+      <div className="col-lg-12">
         <h3>Newly Added Rooms:</h3>
         <div className="row row-cols-1 row-cols-md-3 g-3">
           {rooms.map((room) => (
@@ -209,16 +257,69 @@ function AddRoom() {
           ))}
         </div>
       </div>
+      <br />
       {/* Edit Room Form */}
       {showEditForm && (
         <div className="edit-form">
-          <h3>Edit Room</h3>
-          <form onSubmit={handleEditSubmit}>
-            {/* Add text inputs for editing image, title, description, and pricePerNight */}
-            {/* You can use defaultValue={editedRoom.property} for each input */}
-            {/* Add a submit button to save the changes */}
-            {/* Add a cancel button to close the edit form */}
-          </form>
+          <div className="card" style={{ maxWidth: "400px" }}>
+            <div className="card-body">
+              <h3 className="card-title">Edit Room</h3>
+              <form onSubmit={handleEditSubmit}>
+                {/* Add text inputs for editing image, title, description, and pricePerNight */}
+                <div className="form-group">
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    value={editedRoom.title}
+                    onChange={(e) =>
+                      setEditedRoom({ ...editedRoom, title: e.target.value })
+                    }
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <input
+                    type="text"
+                    value={editedRoom.description}
+                    onChange={(e) =>
+                      setEditedRoom({
+                        ...editedRoom,
+                        description: e.target.value,
+                      })
+                    }
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Price Per Night</label>
+                  <input
+                    type="text"
+                    value={editedRoom.pricePerNight}
+                    onChange={(e) =>
+                      setEditedRoom({
+                        ...editedRoom,
+                        pricePerNight: e.target.value,
+                      })
+                    }
+                    className="form-control"
+                  />
+                </div>
+                {/* Add a submit button to save the changes */}
+                <button type="submit" className="btn btn-success">
+                  Save Changes
+                </button>
+                {/* Add a cancel button to close the edit form */}
+                <button
+                  type="button"
+                  onClick={handleCloseEditForm}
+                  className="btn btn-danger"
+                >
+                  Cancel
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       )}
     </div>
